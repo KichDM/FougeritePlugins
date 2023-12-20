@@ -10,21 +10,33 @@ var azulclaro = "[color #00FFF7]";
 
 function On_Airdrop(v) {
     for (var pl in Server.Players) {
+        var rotation = Player.PlayerClient.controllable.character.transform.rotation.eulerAngles.y;
         var loc = pl.Location;
         var Dist = Util.GetVectorsDistance(loc, v);
         var zona = this.FindLocationName(v);
-        var direction = this.GetDirection(v, loc);
+        var direction = this.GetDirection(v, loc, rotation);
         pl.Message("The " + verde + "Airdrop" + blanco + " has landed in " + naranja + zona + blanco + " at " + amarillo + Dist.toFixed(0) + blanco + " meters from you in the direction of " + azulclaro + direction);
     }
 }
 
-function GetDirection(targetPosition, playerPosition) {
+function GetDirection(targetPosition, playerPosition, angulo) {
     var distance = Util.GetVectorsDistance(targetPosition, playerPosition);
-    if (distance < 10) return GetCardinalDirection(playerPosition);
+    if (distance < 10) {
+        return GetCardinalDirection(angulo);
+    }
     var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
-    var indexX = playerPosition.x < targetPosition.x ? 2 : playerPosition.x > targetPosition.x ? 6 : 4;
-    var indexZ = playerPosition.z < targetPosition.z ? 0 : playerPosition.z > targetPosition.z ? 4 : 2;
-    var index = indexX + indexZ;
+    var diffX = targetPosition.x - playerPosition.x;
+    var diffZ = targetPosition.z - playerPosition.z;
+    var angle = Math.atan2(diffZ, diffX) * (180 / Math.PI);
+    if (angle < 0) {
+        angle += 360;
+    }
+    var index = Math.round(angle / 45) % 8;
+    return directions[index];
+}
+function GetCardinalDirection(rotation) {
+    var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
+    var index = Math.round(rotation / 45) % 8;
     return directions[index];
 }
 
@@ -99,6 +111,12 @@ function GetLocList() {
         '5995,-3978': 'French Valley',
         '7085,-3815': 'Ecko Valley',
         '7348,-4100': 'Ecko Mountain',
-        '6396,-3428': 'Zombie Hill'
+        '6396,-3428': 'Zombie Hill',
+        '6600,-1400': 'Bandit Valley',
+        '3800,-2600': 'Base Camp Ridge',
+        '4250,-3850': 'North Valley',
+        '0,0': 'Middle of Nowhere',
+        '-2650,5200': 'Yosemite Valley',
+        '-5825,-165': 'Crater Valley'
     };
 }
