@@ -18,8 +18,8 @@ function On_Airdrop(v) {
     }
 }
 
-function GetDirection(targetPosition, playerPosition, rotation) {
-    var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
+function GetDirection(targetPosition, playerPosition) {
+    var directions = ['East', 'Northeast', 'North', 'Northwest', 'West', 'Southwest', 'South', 'Southeast'];
     var diffX = targetPosition.x - playerPosition.x;
     var diffZ = targetPosition.z - playerPosition.z;
     var angle = Math.atan2(diffZ, diffX) * (180 / Math.PI);
