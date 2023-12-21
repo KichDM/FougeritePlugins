@@ -5,7 +5,6 @@ var Version = "1.0.0"
 function On_NPCKilled(DeathEvent) {
     var vic = DeathEvent.Victim;
     var ini = Plugin.GetIni("Loot");
-    Util.Log(vic.Name);
     if (ini.GetSetting("Loot", vic.Name.toString())) {
         var groundPosition = GetGround(vic.Location);
         var vector = Util.CreateVector(vic.X, groundPosition, vic.Z);
