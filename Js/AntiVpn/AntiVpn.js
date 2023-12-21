@@ -1,3 +1,7 @@
+var Author = "KichDM";
+var About = "AntiVPN"
+var Version = "1.0.0"
+
 var ini = Plugin.GetIni("ByPassVPN");
 var key = "";
 function On_PlayerConnected(Player) {
