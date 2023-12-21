@@ -9,6 +9,11 @@ function On_PlayerConnected(Player) {
     {
         return;
     }
+    var ini = Plugin.GetIni("ByPassVPN");
+    var bypass = ini.GetSetting(BypassVPN, Player.SteamID);
+    if (bypass) {
+        return;
+    }
     var url = "https://vpnapi.io/api/" + Player.IP + "?key=" + key;
     var JSONData = Web.GET(url);
     var jsonResponse = JSON.DeSerializeJsonToObject(JSONData);
@@ -32,23 +37,14 @@ function On_PlayerConnected(Player) {
     var localeCode = location["locale_code"].ToString();
     var metroCode = location["metro_code"].ToString();
     var isInEuropeanUnion = location["is_in_european_union"].ToString();
-
     var network = jsonResponse["network"];
     var networkAddress = network["network"].ToString();
     var autonomousSystemNumber = network["autonomous_system_number"].ToString();
     var autonomousSystemOrganization = network["autonomous_system_organization"].ToString();
-
     if (proxy == true || vpn == true) {
-            var ini = Plugin.GetIni("ByPassVPN");
-            var bypass = ini.GetSetting(BypassVPN, Player.SteamID);
-            if (bypass) {
-                return;
-            }
-            else {
-                Server.Broadcast("Player Kicked " + Player.Name + " Maybe use VPN or Proxy");
-                Player.Disconnect();
-            }
-    }
+        Server.Broadcast("Player Kicked " + Player.Name + " Maybe use VPN or Proxy");
+        Player.Disconnect();
+        }
 }
 
 function On_Command(player, cmd, args) {
@@ -78,12 +74,18 @@ function On_Command(player, cmd, args) {
             case "vpnlist":
                 if (player.Admin || PermissionSystem.PlayerHasPermission(player, "admin")) {
                     var klk = ini.EnumSection("BypassVPN");
-                    var message = "VPN Whitelist: ";
+                    var message = " ";
+                    var count = 0;
+            
                     for (var gente in klk) {
                         var lista = ini.GetSetting("BypassVPN", gente);
-                        message += "{[color #00FFF7]" + gente.ToString() + " == " + "[color #00FF40]" + lista + "}[color #FFFFFF]" + " | ";
+                        message += "[color #00FFF7]" + gente.ToString() + " == " + "[color #00FF40]" + lista + "[color #FFFFFF]";
+                        if (count < klk.Length - 1) {
+                            message += "[color #DAA520] | [color #FFFFFF]";
+                        }           
+                        count++;
                     }
-                    player.Message(message);
+                    player.MessageFrom("VPN Whitelist",message);
                 }
                 break;
     }
