@@ -27,23 +27,20 @@ function On_PluginInit() {
 }
 
 function RegalosCallback() {
-        Plugin.KillTimer("Regalos");
-        var players = Server.Players;
-        var playerCount = players.Count;
-        if (playerCount == 0) {
-            Plugin.CreateTimer("Regalos", gifttimer).Start();
-            return;
-        }
-        var randomIndex = Math.floor(Math.random() * playerCount);
-        var randomPlayer = players[randomIndex];
-        var itemsToGive = aletoryarray();
-        for (var i = 0; i < itemsToGive.length; i++) {
-            randomPlayer.Inventory.AddItem(itemsToGive[i].weapon, itemsToGive[i].cant);
-        }
-        var broadcastMessage = "[color #CD8C00]" + randomPlayer.Name + "[color #00FFF7] Has received the random gifts ^^ " + "!";
-        for (var i = 0; i < itemsToGive.length; i++) {
-            broadcastMessage += "[color #FFFFFF] , " + "[color #FCFF02][" + itemsToGive[i].cant + "] [color #00FF40]" + itemsToGive[i].weapon;
-        }
-        Server.Broadcast(broadcastMessage);
+    Plugin.KillTimer("Regalos");
+    var players = Server.Players;
+    var playerCount = players.Count;
+    if (playerCount == 0) {
         Plugin.CreateTimer("Regalos", gifttimer).Start();
+        return;
+    }
+    var randomIndex = Math.floor(Math.random() * playerCount);
+    var randomPlayer = players[randomIndex];
+    var itemsToGive = aletoryarray();
+    var broadcastMessage = "[color #CD8C00]" + randomPlayer.Name + "[color #00FFF7] Has received the random gifts ^^ ";
+    for (var i = 0; i < itemsToGive.length; i++) {
+        broadcastMessage += "[color #FFFFFF]" + (i > 0 ? ", " : "") + "[color #FCFF02][" + itemsToGive[i].cant + "] [color #00FF40]" + itemsToGive[i].weapon;
+    }
+    Server.Broadcast(broadcastMessage);
+    Plugin.CreateTimer("Regalos", gifttimer).Start();
 }
