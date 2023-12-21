@@ -13,20 +13,31 @@ function On_Airdrop(v) {
         var loc = pl.Location;
         var Dist = Util.GetVectorsDistance(loc, v);
         var zona = this.FindLocationName(v);
-        var direction = this.GetDirection(v, loc);
+        var rotation = pl.PlayerClient.controllable.character.transform.rotation.eulerAngles.y;
+        var direction = this.GetDirection(v, loc,rotation);
         pl.Message("The " + verde + "Airdrop" + blanco + " has landed in " + naranja + zona + blanco + " at " + amarillo + Dist.toFixed(0) + blanco + " meters from you in the direction of " + azulclaro + direction);
     }
 }
 
-function GetDirection(targetPosition, playerPosition) {
+function GetDirection(targetPosition, playerPosition, rotation) {
+    var distance = Util.GetVectorsDistance(targetPosition, playerPosition);
+    if (distance < 10) {
+        return GetCardinalDirection(rotation);
+    }
     var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
-    var diffX = targetPosition.x - playerPosition.x;
-    var diffZ = targetPosition.z - playerPosition.z;
+    var diffX = playerPosition.x - targetPosition.x;
+    var diffZ = playerPosition.z - targetPosition.z;
     var angle = Math.atan2(diffZ, diffX) * (180 / Math.PI);
     if (angle < 0) {
         angle += 360;
     }
     var index = Math.round(angle / 45) % 8;
+    return directions[index];
+}
+
+function GetCardinalDirection(rotation) {
+    var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
+    var index = Math.round(rotation / 45) % 8;
     return directions[index];
 }
 
