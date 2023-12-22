@@ -2,27 +2,26 @@ var Author = "KichDM";
 var About = "Announcement System"
 var Version = "1.0.0"
 
+// et in minutes, and it will perform a random calculation to choose a minute at random among them to create a timer.
+var mintime = 2;
+var maxtime = 10;
+
+// The list of announcements, it's easy, you just need to put the announcements you want here, and the timer will randomly choose one from this list
 var Announcement = [
   "Server Discord: discord.gg/UKqAjyPrZG",
   "Owner/Server Creator: KichDM#0371.",
   "If you have any questions, feel free to ask in the chat.",
   "The administration team is here to assist you.",
   "Enjoy your time on the server.",
-  "If you encounter any hackers, don't hesitate to report them on Discord or using the /report command.",
-  "All server plugins are customized for this server ^^",
-  "Feel free to share any suggestions for the server on Discord!",
-  "Use the pickaxe for extra loot while farming ^^",
-  "You can view the top players with the most kills using /top",
-  "You can check the next server restart time with the /restart or /reinicio command",
-  "You can check when the airdrop will occur with the /airdrop command",
-  "If you're just starting, the /help command will show you the server commands",
-  "You can view someone's stats with the /stats [player name] command",
-  "You can check the server's gather type using the /farm info command"
+  "Test.",
+  "Test.",
+  "Test.",
+  "Test.",
   ];
 
   function On_ServerInit() {
-    var loco = NumeroRandom(2,10);
-    var tiempo =  minutosAMilisegundos(Number(loco).toFixed(2));
+    var finaltime = NumeroRandom(mintime,maxtime);
+    var tiempo =  minutosAMilisegundos(Number(finaltime).toFixed(2));
 	Plugin.CreateTimer("Announcement", tiempo).Start();
 }
 
@@ -44,27 +43,25 @@ var Announcement = [
 function AnnouncementCallback() {
     AnuncioRandom();
     Plugin.KillTimer("Announcement");
-    var loco = NumeroRandom(2,10);
-    var tiempo =  minutosAMilisegundos(Number(loco).toFixed(2));
+    var finaltime = NumeroRandom(mintime,maxtime);
+    var tiempo =  minutosAMilisegundos(Number(finaltime).toFixed(2));
 	Plugin.CreateTimer("Announcement", tiempo).Start();
 }
 
-// Esto solo cuando se recarga este plugin
+//Only when this plugin reloads.
 function On_PluginInit() {
     if (!Plugin.GetTimer("Announcement"))
         {
-            var loco = NumeroRandom(2,10);
-            var tiempo =  minutosAMilisegundos(Number(loco).toFixed(2));
-            Server.Broadcast("Numero Random " + loco);
+          var finaltime = NumeroRandom(mintime,maxtime);
+            var tiempo =  minutosAMilisegundos(Number(finaltime).toFixed(2));
+            Server.Broadcast("Numero Random " + finaltime);
             Server.Broadcast("Tiempo " + tiempo);
             Plugin.CreateTimer("Announcement", tiempo).Start();
         }
         else {
             Plugin.KillTimer("Announcement");
-            var loco = NumeroRandom(2,10);
-            var tiempo =  minutosAMilisegundos(Number(loco).toFixed(2));
-            //Server.Broadcast("Numero Random " + loco);
-            //Server.Broadcast("Tiempo " + tiempo);
+            var finaltime = NumeroRandom(mintime,maxtime);
+            var tiempo =  minutosAMilisegundos(Number(finaltime).toFixed(2));
             Plugin.CreateTimer("Announcement", tiempo).Start();
         }
   }
