@@ -86,7 +86,6 @@ function On_EntityDeployed(Player, Entity) {
             if (Dist <= parseInt(radio) && !zonaNotificada) {
                 Player.Message("[color#FF8000]You are in the area of [color#FF0040]" + seciones.toString() + "[color#FF8000]. You cannot build here. Move away [color#FF0040]" + alejarse.toFixed(0) + "[color#FF8000] meters.");
                 Entity.Destroy();
-                Player.Inventory.AddItem(item);
                 Player.InventoryNotice("+1 " + StringFix(item));
                 Player.Inventory.AddItem(StringFix(item), 1);
                 zonaNotificada = true;
