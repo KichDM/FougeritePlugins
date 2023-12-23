@@ -16,7 +16,7 @@ var Announcement = [
   "Test.",
   "Test.",
   "Test.",
-  "Test.",
+  "Test."
   ];
 
   function On_ServerInit() {
