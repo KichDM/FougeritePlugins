@@ -27,7 +27,7 @@ function On_Command(Player, cmd, args) {
     klk = Config();
     var klktt = klk.Sections;
     var epicZones = [];
-    if (Player.Admin)
+    if (Player.Admin || PermissionSystem.PlayerHasPermission(Player, "admin"));
     {
     if (cmd == "createw") {
         if (args.Length == 0) {
@@ -63,12 +63,12 @@ function On_Command(Player, cmd, args) {
 
     if (cmd == "t" || cmd == "warps" || cmd == "w" || cmd == "warp") {
         if (args.Length == 0) {
-            Player.Message("━━━━━━━━━━━━━━━━━━━" + red + "◤" + white + Server.server_message_name + " Warps " + red + "◥" + white + "━━━━━━━━━━━━━━━━━━");
+            Player.Message("━━━━━━━━━━━━━━━━━━━[color #00FFFF]◤[/color]" + "[color #FFFFFF]" + Server.server_message_name + " Warps [color #00FFFF]◥[/color]━━━━━━━━━━━━━━━━━━");
             for (var a in klktt) {
                 epicZones.push(a);
             }
             Player.Message("[color #00FFF7]"+epicZones.join("[color #FFFFFF],[color #00FFF7] "));
-            Player.Message("━━━━━━━━━━━━━━━━━━━" + red + "◣" + white + " Warps By" + yellow + " KichDM " + red + "◢" + white + "━━━━━━━━━━━━━━━━━━");
+            Player.Message("━━━━━━━━━━━━━━━━━━━[color #800080]◣[/color]" + "[color #FFFFFF] Warps By[color #FFD700] KichDM [/color][color #800080]◢[/color]━━━━━━━━━━━━━━━━━━");
             if (Player.Admin)
             {
             Player.Message("[color #00FF40] Syntax /createw - Name - Meters (Default 200m). To create new zone");
@@ -101,6 +101,7 @@ function On_Command(Player, cmd, args) {
                 Player.Message("[color #FCFF02] You must wait [color #CD8C00]" + remainingSeconds + " [color #FCFF02] seconds to use the [color #00FFF7] /" + cmd + " [color #FCFF02]  command.");
                 return;
             }
+            break;
         }
     }
 }
