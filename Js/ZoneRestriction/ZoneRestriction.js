@@ -63,8 +63,6 @@ function On_Command(Player, cmd, args) {
                 }
                 break;
         }
-    } else {
-        Player.Message("You don't have the necessary permissions to use this command.");
     }
 }
 
