@@ -18,8 +18,9 @@ var brown = "[color #604200]";
 var turquoise = "[color #00FFC0]";
 
 function On_PlayerConnected (Player) {
-  if (!PermissionSystem.PlayerHasGroup(Player,"user"))
+  PermissionSystem.CreatePermissionPlayer(Player);
   PermissionSystem.AddGroupToPlayer(Player.UID, "user");
+  PermissionSystem.SaveToDisk();
 }
 
 var Kits = {
