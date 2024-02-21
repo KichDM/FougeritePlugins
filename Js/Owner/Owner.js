@@ -1,46 +1,58 @@
 var Author = "KichDM";
-var About = "Sistema de sabes dueño estructuras"
-var Version = "1.0.0"
-
-var lightBlue = "[color#00b7eb]";
-var yellow = "[color#FCFF02]";
-var orange = "[color#CD8C00]";
-var green = "[color#00FF40]";
+var About = "Owner / Who System";
+var Version = "2.0.0";
+var lightBlue = "[color #00FFF7]";
 
 function On_Command(Player, cmd, args) {
     cmd = Data.ToLower(cmd);
-    if (cmd == "owner" || cmd == "owner" || cmd == "who") {
-        var owner = DataStore.Get("OwnersON", Player.SteamID);
-        if (owner != null || owner != undefined || owner) {
-            DataStore.Remove("OwnersON", Player.SteamID);
-            Player.Message(" Deactivated !");
-        } else {
-            Player.Message(lightBlue + "Activated! Hit the structure you want to know the owner of!");
-            DataStore.Add("OwnersON", Player.SteamID, true);
-        }
-    }
-}
-
-function On_PlayerConnected(Player) {
-    DataStore.Remove("OwnersON", Player.SteamID);
-}
-
-function On_EntityHurt(e) {
-    var owner = DataStore.Get("OwnersON", e.Attacker.SteamID);
-    if (e.Attacker != null && e.Entity != null) {
-        if (e.Entity.IsStructure() || e.Entity.IsDeployableObject()) {
-            if (owner) {
-                var Owner = e.Entity.OwnerName;
-                var player = e.Entity.Creator;
-                var active = player.IsOnline;
-                e.Attacker.Message(lightBlue + e.Entity.Name + green + " STRUCTURE CREATOR: " + yellow + Owner);
-                if (active) {
-                    e.Attacker.Message(lightBlue + green + "Is the house owner online? " + yellow + " [" + red + "YES, BE CAREFUL" + yellow + "]");
+    if (cmd == "dono" || cmd == "owner" || cmd == "who") {
+        var object = Util.GetLookObject(Player.PlayerClient.controllable.character.eyesRay, 400, -1);
+        if (object != null) {
+            var structureComponent = object.GetComponent("StructureMaster");
+            if (structureComponent != null) {
+                var entity = Util.FindClosestEntity(structureComponent.transform.position, 2);
+                var ownerId = entity.CreatorID;
+                var owner = Server.FindPlayer(ownerId);
+                if (owner != null) {
+                    Player.Message(lightBlue + "Entity: [color #6A0888]" + entity.Name + lightBlue + " Owner: [color #FCFF02]" + owner.Name + lightBlue + " Online: " + (owner.IsOnline ? "[color #FF0000]Yes" : "[color #00FF40]No"));
+                    return;
                 } else {
-                    e.Attacker.Message(lightBlue + green + "Is the house owner online? " + yellow + " [" + orange + "NO, TAKE ADVANTAGE" + yellow + "]");
+                    Player.Message(lightBlue + "Entity: [color #6A0888]" + entity.Name + lightBlue + " Owner: [color #FCFF02]" + entity.CreatorName + lightBlue + " Online: " + (entity.Creator.IsOnline ? "[color #FF0000]Yes" : "[color #00FF40]No"));
+                    return;
                 }
-                DataStore.Remove("OwnersON", e.Attacker.SteamID);
             }
+            structureComponent = object.GetComponent("StructureComponent");
+            if (structureComponent != null) {
+                var entity = Util.FindClosestEntity(structureComponent.transform.position, 2);
+                var ownerId = entity.CreatorID;
+                var owner = Server.FindPlayer(ownerId);
+                if (owner != null) {
+                    Player.Message(lightBlue + "Entity: [color #6A0888]" + entity.Name + lightBlue + " Owner: [color #FCFF02]" + owner.Name + lightBlue + " Online: " + (owner.IsOnline ? "[color #FF0000]Yes" : "[color #00FF40]No"));
+                    return;
+                } else {
+                    Player.Message(lightBlue + "Entity: [color #6A0888]" + entity.Name + lightBlue + " Owner: [color #FCFF02]" + entity.CreatorName + lightBlue + " Online: " + (entity.Creator.IsOnline ? "[color #FF0000]Yes" : "[color #00FF40]No"));
+                    return;
+                }
+            } else {
+                var structureComponent = object.GetComponent("DeployableObject");
+                if (structureComponent != null) {
+                    var entity = Util.FindClosestEntity(structureComponent.transform.position, 2);
+                    var ownerId = entity.CreatorID;
+                    var owner = Server.FindPlayer(ownerId);
+                    if (owner != null) {
+                        Player.Message(lightBlue + "Entity: [color #6A0888]" + entity.Name + lightBlue + " Owner: [color #FCFF02]" + owner.Name + lightBlue + " Online: " + (owner.IsOnline ? "[color #FF0000]Yes" : "[color #00FF40]No"));
+                        return;
+                    } else {
+                        Player.Message(lightBlue + "Entity: [color #6A0888]" + entity.Name + lightBlue + " Owner: [color #FCFF02]" + entity.CreatorName + lightBlue + " Online: " + (entity.Creator.IsOnline ? "[color #FF0000]Yes" : "[color #00FF40]No"));
+                        return;
+                    }
+                } else {
+                    Player.Message("[color #FF0000]Not a valid structure.");
+                    return;
+                }
+            }
+        } else {
+            Player.Message("[color #FF0000]Nothing is selected or it's not an object.");
         }
     }
 }
