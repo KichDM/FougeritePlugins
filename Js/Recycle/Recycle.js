@@ -40,6 +40,8 @@ function On_Command(Player, cmd, args) {
                 var gg = Util.BlueprintOfItem(item2.datablock);
                 var condition = item2.condition;
                 var entry;
+                if (gg == undefined)
+                return Player.Message("This item is not allowed")
                 for (entry in gg.ingredients) {
                     var cantidad = entry.amount;
                     cantidad *= condition;
@@ -66,7 +68,7 @@ function On_Command(Player, cmd, args) {
                     var mensajeFinal = " [color #F781F3] You Recived: ";
                     for (var j = 0; j < listaing.length; j++) {
                         var ingrediente = listaing[j];
-                        mensajeFinal += "[color #F781F3] You Recived: [color #CD8C00]" + ingrediente.Ingrediente + "[color #00FF40]{" + parseInt(ingrediente.Cant * cantidaditems) + "}";
+                        mensajeFinal += "[color #CD8C00]" + ingrediente.Ingrediente + "[color #00FF40]{" + parseInt(ingrediente.Cant * cantidaditems) + "}";
                         Player.Inventory.AddItem(ingrediente.Ingrediente, parseInt(ingrediente.Cant * cantidaditems));
                         if (j < listaing.length - 1) {
                             mensajeFinal += ",";
