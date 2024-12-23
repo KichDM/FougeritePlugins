@@ -17,6 +17,7 @@ function On_Command(Player, cmd, args) {
             if (i == cantidaditems) {
                 break;
             }
+
             var itemss = [];
             for (var barItem in Player.Inventory.BarItems) {
                 if (barItem && barItem.Name) {
@@ -33,13 +34,22 @@ function On_Command(Player, cmd, args) {
                 Player.Message(red + "The item with the name was not found: " + yellow + itemName);
                 return;
             }
+
             var a = Player.PlayerClient.rootControllable.idMain.GetComponent("Inventory");
             var item2;
             var listaing = []
             if (a.GetItem(slotEncontrado.slot, item2)) {
+                var tiene = Player.Inventory.HasItem(slotEncontrado.item.Name,cantidaditems);
+                if (!tiene)
+                {
+                    Player.Message("You do not have enough in your inventory");
+                    return;
+                }
+                
                 var gg = Util.BlueprintOfItem(item2.datablock);
                 var condition = item2.condition;
                 var entry;
+
                 if (gg == undefined)
                 return Player.Message("This item is not allowed")
                 for (entry in gg.ingredients) {
@@ -89,7 +99,8 @@ function buscaritems(array, busqueda) {
         if (item.Name.toLowerCase().indexOf(busqueda.toLowerCase()) !== -1) {
             var resultado = {
                 name: item.Name,
-                slot: item.Slot
+                slot: item.Slot,
+                item: item
             };
             return resultado;
         }
