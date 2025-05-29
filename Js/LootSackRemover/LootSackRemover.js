@@ -31,9 +31,7 @@ function On_PlayerKilled(DeathEvent) {
         return;
     var victim = DeathEvent.Victim;
     if (victim != null && victim.UID != null) {
-        var suelo = World.GetGround(victim.Location)
-        var coords = Util.CreateVector(victim.Location.x, suelo, victim.Location.z)
-        FindSack(coords, victim);
+        FindSack(victim.Location, victim);
     }
 }
 
