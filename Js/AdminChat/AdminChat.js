@@ -82,7 +82,7 @@ function On_Command(player, cmd, args) {
 
 function sendAdminText(name, text) {
     for (var pl in Server.Players) {
-        if (pl.Admin) {
+        if (pl.Admin || PermissionSystem.PlayerHasGroup(player, "Admin")) {
         var col = activocolor[pl.SteamID];
         if (!col)
         col = "[color#FF0000]";
