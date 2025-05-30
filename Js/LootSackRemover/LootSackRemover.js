@@ -49,11 +49,31 @@ function FindSack(vector3, Player) {
             var objName = obj.toString().ToLower();
             if (Util.ContainsString(objName, "lootsack")) {
                 Util.DestroyObject(obj);
-
+                var mochilas = DataStore.Get("Mochilas", "Borradas")
+                mochilas++;
+                DataStore.Add("Mochilas", "Borradas", mochilas);
             }
             else {
                 Plugin.KillParallelTimer("mochila" + id);
             }
         }
     });
+}
+
+var C = {
+    amarillo: "[color#FCFF02]",
+    blanco: "[color#FFFFFF]",
+    verde: "[color#00FF40]",
+    rosa: "[color#F781F3]",
+    reset: "[color#FFFFFF]" // Puedes usar esto para reiniciar el color si es necesario
+};
+
+function On_ServerInit() {
+    DataStore.Add("Mochilas", "Borradas", 0);
+}
+
+function On_ServerSaved(objectsCount, saveTime) {
+    var mochilas = DataStore.Get("Mochilas", "Borradas")
+    Server.Broadcast(C.rosa + "✦ " + C.amarillo + "LootSacks removidos en el servidor: " + C.verde + parseInt(mochilas).toString() + C.rosa + " ✦");
+    DataStore.Add("Mochilas", "Borradas", 0);
 }
