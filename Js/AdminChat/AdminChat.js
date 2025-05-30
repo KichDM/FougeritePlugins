@@ -41,7 +41,7 @@ function argsToText(args, inicio) {
 function On_Command(player, cmd, args) {
     cmd = Data.ToLower(cmd);
     var steamID = player.SteamID;
-    if (cmd == "ac") {
+    if (cmd == "ac" && PermissionSystem.PlayerHasGroup(player, "Admin") || player.Admin) {
         var activo = DataStore.Get("AdminChat", steamID);
         if (args.Length == 0) {
             var nuevoEstado = !activo;
