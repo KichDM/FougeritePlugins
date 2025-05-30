@@ -41,52 +41,54 @@ function argsToText(args, inicio) {
 function On_Command(player, cmd, args) {
     cmd = Data.ToLower(cmd);
     var steamID = player.SteamID;
-    if (cmd == "ac" && PermissionSystem.PlayerHasGroup(player, "Admin") || player.Admin) {
-        var activo = DataStore.Get("AdminChat", steamID);
-        if (args.Length == 0) {
-            var nuevoEstado = !activo;
-            DataStore.Add("AdminChat", steamID, nuevoEstado);
-            player.MessageFrom("AdminChat", "AdminChat 2.0");
-            player.MessageFrom("AdminChat", "---------- Estado: " + (nuevoEstado ? "ON" : "OFF") + " ----------");
-            player.MessageFrom("AdminChat", "Usa '/ac texto' para chatear con los admins.");
-            player.MessageFrom("AdminChat", "Usa '/ac' para alternar entre ON y OFF.");
-            player.MessageFrom("AdminChat", "Usa '/ac color' para cambiar el color del chat (hex o nombre).");
-            return;
-        }
-        if (args[0] == "color") {
-            if (args.Length == 1) {
-                player.MessageFrom("AdminChat", "Colores disponibles:");
-                for (var key in C) {
-                    var color = C[key];
-                    player.Message(color + key);
-                }
-                player.MessageFrom("AdminChat", "Usa: /ac color <nombre> para elegir.");
-            } else {
-                var nombre = args[1].toLowerCase();
-                if (C.hasOwnProperty(nombre)) {
-                    if (activocolor.hasOwnProperty(steamID)) {
-                        delete activocolor[steamID];
+    if (cmd == "ac") {
+        if (PermissionSystem.PlayerHasGroup(player, "Admin") || player.Admin) {
+            var activo = DataStore.Get("AdminChat", steamID);
+            if (args.Length == 0) {
+                var nuevoEstado = !activo;
+                DataStore.Add("AdminChat", steamID, nuevoEstado);
+                player.MessageFrom("AdminChat", "AdminChat 2.0");
+                player.MessageFrom("AdminChat", "---------- Estado: " + (nuevoEstado ? "ON" : "OFF") + " ----------");
+                player.MessageFrom("AdminChat", "Usa '/ac texto' para chatear con los admins.");
+                player.MessageFrom("AdminChat", "Usa '/ac' para alternar entre ON y OFF.");
+                player.MessageFrom("AdminChat", "Usa '/ac color' para cambiar el color del chat (hex o nombre).");
+                return;
+            }
+            if (args[0] == "color") {
+                if (args.Length == 1) {
+                    player.MessageFrom("AdminChat", "Colores disponibles:");
+                    for (var key in C) {
+                        var color = C[key];
+                        player.Message(color + key);
                     }
-                    activocolor[steamID] = C[nombre];
-                    player.MessageFrom("AdminChat", C[nombre] + "Color del adminchat cambiado a: " + nombre);
+                    player.MessageFrom("AdminChat", "Usa: /ac color <nombre> para elegir.");
                 } else {
-                    player.MessageFrom("AdminChat", C.rojo + "Color no válido. Usa '/ac color' para ver la lista.");
+                    var nombre = args[1].toLowerCase();
+                    if (C.hasOwnProperty(nombre)) {
+                        if (activocolor.hasOwnProperty(steamID)) {
+                            delete activocolor[steamID];
+                        }
+                        activocolor[steamID] = C[nombre];
+                        player.MessageFrom("AdminChat", C[nombre] + "Color del adminchat cambiado a: " + nombre);
+                    } else {
+                        player.MessageFrom("AdminChat", C.rojo + "Color no válido. Usa '/ac color' para ver la lista.");
+                    }
                 }
             }
-        }
-        else {
-            sendAdminText(player.Name, argsToText(args, 0))
+            else if (args.Length >= 1) {
+                sendAdminText(player.Name, argsToText(args, 0))
+            }
         }
     }
 }
 
 function sendAdminText(name, text) {
     for (var pl in Server.Players) {
-        if (pl.Admin || PermissionSystem.PlayerHasGroup(player, "Admin")) {
-        var col = activocolor[pl.SteamID];
-        if (!col)
-        col = "[color#FF0000]";
-        pl.MessageFrom("[AdminChat] " + name, col + text);
+        if (pl.Admin) {
+            var col = activocolor[pl.SteamID];
+            if (!col)
+                col = "[color#FF0000]";
+            pl.MessageFrom("[AdminChat] " + name, col + text);
         }
     }
 }
