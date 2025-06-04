@@ -7,28 +7,53 @@ var naranja = "[color#CD8C00]";
 var blanco = "[color#FFFFFF]";
 var azulclaro = "[color #00FFF7]";
 
-
 function On_Airdrop(v) {
     for (var pl in Server.Players) {
         var loc = pl.Location;
         var Dist = Util.GetVectorsDistance(loc, v);
         var zona = this.FindLocationName(v);
         var direction = this.GetDirection(v, loc);
-        pl.Message("The " + verde + "Airdrop" + blanco + " has landed in " + naranja + zona + blanco + " at " + amarillo + Dist.toFixed(0) + blanco + " meters from you in the direction of " + azulclaro + direction);
+        var rotation = pl.PlayerClient.controllable.character.transform.rotation.eulerAngles.y;
+        var arrow = GetArrowToAirdrop(v, loc, rotation);
+
+        pl.MessageFrom("AirdropAlert", "[color#CD8C00]" + zona + "[color#FFFFFF]" + " Dist " + "[color#FCFF02]" + Dist.toFixed(0) + "[color#FFFFFF]" + " Direct " + "[color #00FFF7]" + direction + " " + arrow);
+
     }
 }
 
 function GetDirection(targetPosition, playerPosition) {
-    var directions = ['East', 'Northeast', 'North', 'Northwest', 'West', 'Southwest', 'South', 'Southeast'];
-    var diffX = targetPosition.x - playerPosition.x;
-    var diffZ = targetPosition.z - playerPosition.z;
-    var angle = Math.atan2(diffZ, diffX) * (180 / Math.PI);
-    if (angle < 0) {
-        angle += 360;
-    }
+    var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
+    var dx = targetPosition.x - playerPosition.x;
+    var dz = targetPosition.z - playerPosition.z;
+    var angle = Math.atan2(dx, dz) * (180 / Math.PI); // dx, dz para que 0° sea Norte
+    if (angle < 0) angle += 360;
     var index = Math.round(angle / 45) % 8;
     return directions[index];
 }
+
+// Devuelve la flecha según hacia dónde mira el jugador respecto al airdrop
+function GetArrowToAirdrop(airdropPos, playerPos, playerViewAngle) {
+    var dx = airdropPos.x - playerPos.x;
+    var dz = airdropPos.z - playerPos.z;
+    var angleToAirdrop = Math.atan2(dx, dz) * (180 / Math.PI);
+    if (angleToAirdrop < 0) angleToAirdrop += 360;
+
+    // Diferencia entre donde mira el jugador y el airdrop
+    var diff = angleToAirdrop - playerViewAngle;
+    if (diff < 0) diff += 360;
+    if (diff > 360) diff -= 360;
+
+    if (diff >= 337.5 || diff < 22.5) return "↑";
+    if (diff >= 22.5 && diff < 67.5) return "↗";
+    if (diff >= 67.5 && diff < 112.5) return "→";
+    if (diff >= 112.5 && diff < 157.5) return "↘";
+    if (diff >= 157.5 && diff < 202.5) return "↓";
+    if (diff >= 202.5 && diff < 247.5) return "↙";
+    if (diff >= 247.5 && diff < 292.5) return "←";
+    if (diff >= 292.5 && diff < 337.5) return "↖";
+    return "?";
+}
+
 
 function FindLocationName(vector3) {
     var locationsList = GetLocList();

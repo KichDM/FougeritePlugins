@@ -4,19 +4,31 @@ var Version = "1.0.0"
 
 function On_Command(Player, cmd, args) {
     if (cmd == "loc" || cmd == "pos") {
+
         var rotation = Player.PlayerClient.controllable.character.transform.rotation.eulerAngles.y;
         var locationName = FindLocationName(Player);
-        Player.Message("[color #00FF40]Your position is in [color #FCFF02]"  + Player.X.toFixed(2) + " [color #CD8C00] - X [color #FCFF02] " + Player.Y.toFixed(2) + " [color #CD8C00] - Y  [color #FCFF02] "+ Player.Z.toFixed(2) + " [color #CD8C00] - Z [color #FCFF02] ");
+        Player.Message("[color #00FF40]Your position is in [color #FCFF02]" + Player.X.toFixed(2) + " [color #CD8C00] - X [color #FCFF02] " + Player.Y.toFixed(2) + " [color #CD8C00] - Y  [color #FCFF02] " + Player.Z.toFixed(2) + " [color #CD8C00] - Z [color #FCFF02] ");
         Player.Message("[color #00FF40] You are in the zone [color #00FFF7]" + locationName);
         var direction = GetCardinalDirection(rotation);
-        Player.Message("[color #00FF40] You are looking towards him [color #FCFF02]" + direction);
+        Player.Message("[color #00FF40] You are looking towards [color #FCFF02]" + direction);
     }
 }
 
 function GetCardinalDirection(rotation) {
-    var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
+    var directions = [
+        { name: 'North', arrow: '↑' },
+        { name: 'Northeast', arrow: '↗' },
+        { name: 'East', arrow: '→' },
+        { name: 'Southeast', arrow: '↘' },
+        { name: 'South', arrow: '↓' },
+        { name: 'Southwest', arrow: '↙' },
+        { name: 'West', arrow: '←' },
+        { name: 'Northwest', arrow: '↖' }
+    ];
     var index = Math.round(rotation / 45) % 8;
-    return directions[index];
+    var dir = directions[index];
+    return dir.name + " " + dir.arrow;
+
 }
 
 function FindLocationName(player) {
@@ -24,19 +36,11 @@ function FindLocationName(player) {
     var vector = Util.CreateVector2(player.X, player.Z);
     var closestLocation = null;
     var closestDistance = 9999999;
-    // Imprimir coordenadas del jugador
-    //Util.Log("Coordenadas del jugador: X=" + player.X + ", Z=" + player.Z);
-
     for (var loc in locationsList) {
         var locVector = loc.split(',');
         var locX = parseFloat(locVector[0]);
         var locZ = parseFloat(locVector[1]);
-        // Imprimir coordenadas de la ubicación actual
-        //Util.Log("Coordenadas de " + locationsList[loc] + ": X=" + locX + ", Z=" + locZ);
         var distance = Util.GetVector2sDistance(vector, Util.CreateVector2(locX, locZ));
-        // Agregar un mensaje para debug
-        //Util.Log("Distancia a " + locationsList[loc] + ": " + distance);
-
         if (distance < closestDistance) {
             closestDistance = distance;
             closestLocation = locationsList[loc];
@@ -99,6 +103,12 @@ function GetLocList() {
         '5995,-3978': 'French Valley',
         '7085,-3815': 'Ecko Valley',
         '7348,-4100': 'Ecko Mountain',
-        '6396,-3428': 'Zombie Hill'
+        '6396,-3428': 'Zombie Hill',
+        '6600,-1400': 'Bandit Valley',
+        '3800,-2600': 'Base Camp Ridge',
+        '4250,-3850': 'North Valley',
+        '0,0': 'Middle of Nowhere',
+        '-2650,5200': 'Yosemite Valley',
+        '-5825,-165': 'Crater Valley'
     };
 }
