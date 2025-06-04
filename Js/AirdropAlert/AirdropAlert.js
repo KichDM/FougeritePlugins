@@ -11,13 +11,11 @@ function On_Airdrop(v) {
     for (var pl in Server.Players) {
         var loc = pl.Location;
         var Dist = Util.GetVectorsDistance(loc, v);
-        var zona = this.FindLocationName(v);
-        var direction = this.GetDirection(v, loc);
+        var zona = FindLocationName(v);
+        var direction = GetDirection(v, loc);
         var rotation = pl.PlayerClient.controllable.character.transform.rotation.eulerAngles.y;
         var arrow = GetArrowToAirdrop(v, loc, rotation);
-
-        pl.MessageFrom("AirdropAlert", "[color#CD8C00]" + zona + "[color#FFFFFF]" + " Dist " + "[color#FCFF02]" + Dist.toFixed(0) + "[color#FFFFFF]" + " Direct " + "[color #00FFF7]" + direction + " " + arrow);
-
+        pl.MessageFrom("AirdropAlert", naranja + zona + blanco + " Dist " + amarillo + Dist.toFixed(0) + blanco + " Direct " + azulclaro + direction + " " + arrow);
     }
 }
 
@@ -25,20 +23,18 @@ function GetDirection(targetPosition, playerPosition) {
     var directions = ['North', 'Northeast', 'East', 'Southeast', 'South', 'Southwest', 'West', 'Northwest'];
     var dx = targetPosition.x - playerPosition.x;
     var dz = targetPosition.z - playerPosition.z;
-    var angle = Math.atan2(dx, dz) * (180 / Math.PI); // dx, dz para que 0° sea Norte
+    var angle = Math.atan2(dx, dz) * (180 / Math.PI); // 0° = North (Z+)
     if (angle < 0) angle += 360;
     var index = Math.round(angle / 45) % 8;
     return directions[index];
 }
 
-// Devuelve la flecha según hacia dónde mira el jugador respecto al airdrop
 function GetArrowToAirdrop(airdropPos, playerPos, playerViewAngle) {
     var dx = airdropPos.x - playerPos.x;
     var dz = airdropPos.z - playerPos.z;
     var angleToAirdrop = Math.atan2(dx, dz) * (180 / Math.PI);
     if (angleToAirdrop < 0) angleToAirdrop += 360;
 
-    // Diferencia entre donde mira el jugador y el airdrop
     var diff = angleToAirdrop - playerViewAngle;
     if (diff < 0) diff += 360;
     if (diff > 360) diff -= 360;
@@ -53,7 +49,6 @@ function GetArrowToAirdrop(airdropPos, playerPos, playerViewAngle) {
     if (diff >= 292.5 && diff < 337.5) return "↖";
     return "?";
 }
-
 
 function FindLocationName(vector3) {
     var locationsList = GetLocList();
